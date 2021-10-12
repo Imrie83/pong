@@ -1,4 +1,6 @@
 import turtle
+import os
+import sys
 
 # Screen setup
 wn = turtle.Screen()
@@ -75,6 +77,16 @@ def paddle_right_down():
     paddle_right.sety(y)
 
 
+# System detection
+def play_sound():
+    if sys.platform.upper() == "LINUX":
+        return os.system("aplay pong.wav&")
+    elif sys.platform.upper() == "DARWIN":
+        return os.system("afplay pong.wav&")
+    # elif sys.platform.upper() == "WIN32":
+    #    return winsound.PlaySound("pong.wav", winsound.SND_ASYNC)
+
+
 # Keyboard binding
 wn.listen()
 wn.onkeypress(paddle_left_up, "w")
@@ -94,10 +106,12 @@ while True:
     if ball.ycor() > 290:
         ball.sety(290)
         ball.dy *= -1
+        play_sound()
 
     if ball.ycor() < -290:
         ball.sety(-290)
         ball.dy *= -1
+        play_sound()
 
     if ball.xcor() > 390:
         ball.goto(0, 0)
@@ -105,6 +119,7 @@ while True:
         score_a += 1
         pen.clear()
         pen.write(f"Player A {score_a} - {score_b} Player B", align="center", font=("Courier", 16, "bold"))
+        play_sound()
 
     if ball.xcor() < -390:
         ball.goto(0, 0)
@@ -112,14 +127,17 @@ while True:
         score_b += 1
         pen.clear()
         pen.write(f"Player A {score_a} - {score_b} Player B", align="center", font=("Courier", 16, "bold"))
+        play_sound()
 
     # Paddle / Ball collisions
     if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_right.ycor() + 50
                                                       and ball.ycor() > paddle_right.ycor() - 50):
         ball.setx(340)
         ball.dx *= -1
+        play_sound()
 
     if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_left.ycor() + 50
                                                         and ball.ycor() > paddle_left.ycor() - 50):
         ball.setx(-340)
         ball.dx *= -1
+        play_sound()
